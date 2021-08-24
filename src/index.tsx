@@ -10,9 +10,7 @@ import type { DaySpends } from "./types";
 
 const { width } = Dimensions.get("window");
 
-type LayoutProps = {};
-
-const Layout: React.FC<LayoutProps> = ({}) => {
+const Layout: React.FC = () => {
     const [data, setData] = useState<Array<DaySpends>>([]);
     const handleAdd = async (howMuch: number, forWhat: string) => {
         const result = await addSpend({

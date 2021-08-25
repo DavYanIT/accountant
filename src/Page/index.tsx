@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    Text,
-    View,
-    SafeAreaView,
-    ScrollView,
-    KeyboardAvoidingView,
-} from "react-native";
+import { Text, View, SafeAreaView, ScrollView, KeyboardAvoidingView } from "react-native";
 import SpendCard from "../SpendCard";
 
 import type { DaySpends, Spend } from "../types";

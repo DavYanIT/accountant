@@ -6,8 +6,8 @@ export const getJSON = async (key: string) =>
 export const setJSON = (key: string, data: any) =>
     AsyncStorage.setItem(key, JSON.stringify(data));
 
-export const formatedDate = (date: moment.MomentInput = new Date()) =>
-    moment(date).format("DD MMM YYYY");
+export const formatedDate = (date: string = new Date().toISOString()) =>
+    moment(new Date(date)).format("DD MMM YYYY");
 
 export const dayToKey = (day: moment.MomentInput) => `DAY_ITEM:${day}`;
 

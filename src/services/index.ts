@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import moment from "moment";
 import { dayToKey, formatedDate, getJSON, setJSON } from "../helpers";
 
 import type { DaySpends, Spend } from "../types";
@@ -32,6 +31,23 @@ export async function addSpend(spend: Spend, day?: string) {
     }
 }
 
+export async function updateSpend(spend: Spend, day?: string) {
+    try {
+        const formatedDay = formatedDate(day);
+        const daySpends = (await getJSON(dayToKey(formatedDay))) as DaySpends;
+
+        const spendIndex = daySpends.spends.findIndex((item) => item.id === spend.id);
+
+        daySpends.spends.splice(spendIndex, 1, spend);
+        daySpends.dayTotal = daySpends.spends.reduce((prev, curr) => prev + curr.howMuch, 0);
+
+        await setJSON(dayToKey(formatedDay), daySpends);
+        return daySpends;
+    } catch (err) {
+        console.log("The Error", err);
+    }
+}
+
 export function getSpends(day: string) {
     return getJSON(dayToKey(day));
 }
@@ -54,17 +70,14 @@ export async function removeSpend(id: number, day: string) {
     }
 
     daySpends.spends.splice(spendIndex, 1);
-    daySpends.dayTotal = daySpends.spends.reduce(
-        (prev, curr) => prev + curr.howMuch,
-        0
-    );
+    daySpends.dayTotal = daySpends.spends.reduce((prev, curr) => prev + curr.howMuch, 0);
     await setJSON(dayToKey(day), daySpends);
     return daySpends;
 }
 
 // HELPER SCRIPTS
 
-function removeDataForDay(day?: moment.MomentInput) {
+function removeDataForDay(day?: any) {
     console.log("removeDataForDay for", day);
     AsyncStorage.removeItem(dayToKey(day));
 }
@@ -73,10 +86,7 @@ function removeDataForDay(day?: moment.MomentInput) {
 async function recalculateTotal() {
     const data = await getAllData();
     data.forEach(async (day) => {
-        day.dayTotal = day.spends.reduce(
-            (prev, curr) => prev + curr.howMuch,
-            0
-        );
+        day.dayTotal = day.spends.reduce((prev, curr) => prev + curr.howMuch, 0);
         await setJSON(dayToKey(day.day), day);
     });
 }

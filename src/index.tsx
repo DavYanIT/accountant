@@ -4,17 +4,18 @@ import Carousel from "react-native-snap-carousel";
 import Page from "./Page";
 import AddButton from "./AddButton";
 import SpendFormModal from "./SpendFormModal";
-import { addSpend, getAllData, removeSpend } from "./services";
+import { addSpend, getAllData, removeSpend, updateSpend } from "./services";
 import { styles } from "./styles";
 
-import type { DaySpends } from "./types";
+import type { DaySpends, Spend } from "./types";
+import type { SpendFormModalRef } from "./SpendFormModal";
 
 const { width } = Dimensions.get("window");
 
 const Layout: React.FC = () => {
     const [data, setData] = useState<Array<DaySpends>>([]);
     const addButtonRef = useRef({ open() {}, close() {} });
-    const spendFormRef = useRef<any>();
+    const spendFormRef = useRef({} as SpendFormModalRef);
 
     const handleAdd = async (howMuch: number, forWhat?: string) => {
         if (!howMuch) {
@@ -43,6 +44,18 @@ const Layout: React.FC = () => {
     const handleRemove = async (id: number, day: string) => {
         const result = await removeSpend(id, day);
         const todayIndex = data.findIndex((item) => item.day === result?.day);
+        data.splice(todayIndex, 1, result);
+        setData([...data]);
+        spendFormRef.current.close();
+        addButtonRef.current.close();
+    };
+
+    const handleUpdate = async (spend: Spend, day: string) => {
+        const result = await updateSpend(spend, day);
+        const todayIndex = data.findIndex((item) => item.day === result?.day);
+        if (!result) {
+            return;
+        }
         data.splice(todayIndex, 1, result);
         setData([...data]);
         spendFormRef.current.close();
@@ -83,6 +96,7 @@ const Layout: React.FC = () => {
                 ref={spendFormRef}
                 onSave={handleAdd}
                 onRemove={handleRemove}
+                onUpdate={handleUpdate}
             />
             <AddButton
                 ref={addButtonRef}

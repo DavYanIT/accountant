@@ -1,9 +1,4 @@
-import React, {
-    useReducer,
-    useRef,
-    forwardRef,
-    useImperativeHandle,
-} from "react";
+import React, { useReducer, useRef, forwardRef, useImperativeHandle } from "react";
 import {
     Button,
     Dimensions,
@@ -13,6 +8,8 @@ import {
     View,
 } from "react-native";
 import { modalStyles, formStyles } from "./styles";
+
+import type { Spend } from "../types";
 
 const { width: viewportWidth } = Dimensions.get("window");
 
@@ -24,13 +21,19 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 type SpendFormModalProps = {
     onSave: (howMuch: number, forWhat?: string) => void;
     onRemove: (id: number, day: string) => void;
+    onUpdate: (spend: Spend, day: string) => void;
+};
+
+export type SpendFormModalRef = {
+    open(state?: FormValues): void;
+    close(): void;
 };
 
 type FormValues = {
     id?: number;
     day?: string;
     howMuch: string;
-    forWhat: string;
+    forWhat?: string;
 };
 
 type ModalState = {
@@ -45,9 +48,7 @@ type ModalState = {
 
 type ModalStateReducer = (
     state: ModalState,
-    action:
-        | { type: "hide" }
-        | { type: "show" | "update.form"; payload: Partial<FormValues> }
+    action: { type: "hide" } | { type: "show" | "update.form"; payload: Partial<FormValues> }
 ) => ModalState;
 
 const modalHeight = 200;
@@ -88,7 +89,7 @@ const modalStateReducer: ModalStateReducer = (prevState, action) => {
     }
 };
 
-const SpendFormModal = forwardRef<any, SpendFormModalProps>((props, ref) => {
+const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props, ref) => {
     const forWhatRef = useRef({} as TextInput);
     const [modalState, dispatch] = useReducer<ModalStateReducer>(
         modalStateReducer,
@@ -102,8 +103,8 @@ const SpendFormModal = forwardRef<any, SpendFormModalProps>((props, ref) => {
     useImperativeHandle(
         ref,
         () => ({
-            open(state: FormValues) {
-                dispatch({ type: "show", payload: state });
+            open(state) {
+                dispatch({ type: "show", payload: state || {} });
             },
             close,
         }),
@@ -111,7 +112,13 @@ const SpendFormModal = forwardRef<any, SpendFormModalProps>((props, ref) => {
     );
 
     const handleSave = () => {
-        props.onSave(Number(modalState.howMuch), modalState.forWhat);
+        const { id, howMuch: howMuchStr, forWhat, day = "" } = modalState;
+        const howMuch = Number(howMuchStr);
+        if (id) {
+            props.onUpdate({ id, howMuch, forWhat }, day);
+        } else {
+            props.onSave(howMuch, forWhat);
+        }
         close();
     };
 
@@ -157,14 +164,10 @@ const SpendFormModal = forwardRef<any, SpendFormModalProps>((props, ref) => {
                             justifyContent: "space-around",
                         }}
                     >
-                        <Button title="Save" onPress={handleSave} />
                         {!!modalState.id && (
-                            <Button
-                                title="Delete"
-                                onPress={handleRemove}
-                                color="red"
-                            />
+                            <Button title="Delete" onPress={handleRemove} color="red" />
                         )}
+                        <Button title="Save" onPress={handleSave} />
                     </View>
                 </View>
             )}

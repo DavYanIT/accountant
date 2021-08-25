@@ -5,24 +5,20 @@ import {
     SafeAreaView,
     ScrollView,
     KeyboardAvoidingView,
-    Platform,
 } from "react-native";
-import SpendCard from "./SpendCard";
+import SpendCard from "../SpendCard";
 
-import type { DaySpends } from "./types";
+import type { DaySpends, Spend } from "../types";
 
 type PageProps = {
     item: DaySpends;
     index?: number;
+    onCardPress: (spend: Spend, day: string) => void;
 };
 
-const Page = ({ item }: PageProps) => {
+const Page = ({ item, onCardPress }: PageProps) => {
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior="padding"
-            keyboardVerticalOffset={Platform.OS === "ios" ? 140 : -140}
-        >
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
             <SafeAreaView
                 style={{
                     height: "100%",
@@ -53,7 +49,11 @@ const Page = ({ item }: PageProps) => {
                         Total: {item.dayTotal}
                     </Text>
                     {item.spends.map((spend) => (
-                        <SpendCard key={spend.id} spend={spend} />
+                        <SpendCard
+                            key={spend.id}
+                            spend={spend}
+                            onPress={() => onCardPress(spend, item.day)}
+                        />
                     ))}
                 </ScrollView>
             </SafeAreaView>

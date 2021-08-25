@@ -1,7 +1,7 @@
 export type Spend = {
     id: number;
     howMuch: number;
-    forWhat: string;
+    forWhat?: string;
     currency?: "dram" | "dollar";
 };
 

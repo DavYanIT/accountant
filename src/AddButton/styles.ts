@@ -5,35 +5,7 @@ const buttonSize = 56;
 const lineWidth = 3;
 const lineHeight = 35;
 
-// const buttonSize = 64;
-
-// const lineWidth = 4;
-// const lineHeight = 40;
-
-export const modalStyles = StyleSheet.create({
-    container: {
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: "rgba(130, 130, 130, 1)",
-        position: "absolute",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(230, 255, 255, 1)",
-        padding: 8,
-    },
-    input: {
-        flex: 1,
-        fontSize: 16,
-        margin: 8,
-        padding: 8,
-        borderRadius: 8,
-        borderWidth: 1,
-        backgroundColor: "rgba(245, 253, 253, 1)",
-        borderColor: "rgba(130, 130, 130, 0.75)",
-    },
-});
-
-export const buttonStyles = StyleSheet.create({
+export const styles = StyleSheet.create({
     container: {
         position: "absolute",
         right: 16,

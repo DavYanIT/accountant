@@ -2,19 +2,19 @@ import React, {
     useState,
     useEffect,
     useImperativeHandle,
-    useCallback,
     forwardRef,
     useRef,
 } from "react";
 import { TouchableOpacity, Animated, View } from "react-native";
-import { buttonStyles } from "./styles";
+import { styles } from "./styles";
 
 type AddButtonProps = {
     onPress: (isOpen: boolean) => void;
 };
 
 type AddButtonRef = {
-    toggle: () => void;
+    open: () => void;
+    close: () => void;
 };
 
 const AddButton = forwardRef<AddButtonRef, AddButtonProps>(
@@ -22,17 +22,17 @@ const AddButton = forwardRef<AddButtonRef, AddButtonProps>(
         const [opened, setOpened] = useState(false);
         const deg1 = useRef(new Animated.Value(0)).current;
 
-        const toggle = useCallback(() => {
-            onPress(!opened);
-            setOpened(!opened);
-        }, [opened]);
-
         useImperativeHandle(
             ref,
             () => ({
-                toggle,
+                open() {
+                    setOpened(true);
+                },
+                close() {
+                    setOpened(false);
+                },
             }),
-            [toggle]
+            []
         );
 
         useEffect(() => {
@@ -54,17 +54,23 @@ const AddButton = forwardRef<AddButtonRef, AddButtonProps>(
         });
 
         return (
-            <TouchableOpacity style={buttonStyles.container} onPress={toggle}>
-                <View style={buttonStyles.plusWrapper}>
+            <TouchableOpacity
+                style={styles.container}
+                onPress={() => {
+                    onPress(!opened);
+                    setOpened(!opened);
+                }}
+            >
+                <View style={styles.plusWrapper}>
                     <Animated.View
                         style={[
-                            buttonStyles.plus,
+                            styles.plus,
                             { transform: [{ rotate: spin1 }] },
                         ]}
                     />
                     <Animated.View
                         style={[
-                            buttonStyles.plus,
+                            styles.plus,
                             { transform: [{ rotate: spin2 }] },
                         ]}
                     />

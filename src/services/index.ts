@@ -44,6 +44,24 @@ export async function getAllData(): Promise<Array<DaySpends>> {
     return await Promise.all(dayKeys.map(getJSON));
 }
 
+export async function removeSpend(id: number, day: string) {
+    const daySpends = (await getJSON(dayToKey(day))) as DaySpends;
+
+    const spendIndex = daySpends.spends.findIndex((spend) => spend.id === id);
+
+    if (spendIndex === -1) {
+        throw new Error("Not found!");
+    }
+
+    daySpends.spends.splice(spendIndex, 1);
+    daySpends.dayTotal = daySpends.spends.reduce(
+        (prev, curr) => prev + curr.howMuch,
+        0
+    );
+    await setJSON(dayToKey(day), daySpends);
+    return daySpends;
+}
+
 // HELPER SCRIPTS
 
 function removeDataForDay(day?: moment.MomentInput) {

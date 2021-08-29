@@ -1,102 +1,29 @@
 import React, { useReducer, useRef, forwardRef, useImperativeHandle } from "react";
-import {
-    Button,
-    Dimensions,
-    LayoutAnimation,
-    NativeModules,
-    TextInput,
-    View,
-} from "react-native";
+import { Button, LayoutAnimation, NativeModules, TextInput, View } from "react-native";
+import { formModalInitialState, formModalReducer } from "../reducers";
 import { modalStyles, formStyles } from "./styles";
 
-import type { Spend } from "../types";
-
-const { width: viewportWidth } = Dimensions.get("window");
+import type {
+    FormValues,
+    ModalStateReducer,
+    SpendFormModalProps,
+    SpendFormModalRef,
+} from "../types";
 
 const { UIManager } = NativeModules;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
     UIManager.setLayoutAnimationEnabledExperimental(true);
 
-type SpendFormModalProps = {
-    onSave: (howMuch: number, forWhat: string, day: string) => void;
-    onRemove: (id: number, day: string) => void;
-    onUpdate: (spend: Spend, day: string) => void;
-};
-
-export type SpendFormModalRef = {
-    open(state?: FormValues): void;
-    close(): void;
-};
-
-type FormValues = {
-    id?: number;
-    day?: string;
-    howMuch?: string;
-    forWhat?: string;
-};
-
-type ModalState = {
-    styles: {
-        height: number;
-        width: number;
-        bottom?: number;
-        top?: number;
-    };
-    open: boolean;
-} & Partial<FormValues>;
-
-type ModalStateReducer = (
-    state: ModalState,
-    action: { type: "hide" } | { type: "show" | "update.form"; payload: Partial<FormValues> }
-) => ModalState;
-
-const modalHeight = 200;
-
-const initialState = {
-    styles: {
-        height: 0,
-        width: 0,
-        bottom: -(modalHeight + 1),
-    },
-    open: false,
-};
-
-const modalStateReducer: ModalStateReducer = (prevState, action) => {
-    switch (action.type) {
-        case "show": {
-            LayoutAnimation.spring();
-            return {
-                styles: {
-                    height: modalHeight,
-                    width: viewportWidth - 64,
-                    top: 100,
-                },
-                open: true,
-                ...action.payload,
-            };
-        }
-        case "hide": {
-            LayoutAnimation.spring();
-            return { ...initialState };
-        }
-        case "update.form": {
-            return {
-                ...prevState,
-                ...action.payload,
-            };
-        }
-    }
-};
-
 const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props, ref) => {
     const forWhatRef = useRef({} as TextInput);
     const [modalState, dispatch] = useReducer<ModalStateReducer>(
-        modalStateReducer,
-        initialState
+        formModalReducer,
+        formModalInitialState
     );
 
     const close = () => {
+        LayoutAnimation.spring();
         dispatch({ type: "hide" });
     };
 
@@ -104,6 +31,7 @@ const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props
         ref,
         () => ({
             open(state) {
+                LayoutAnimation.spring();
                 dispatch({ type: "show", payload: state || {} });
             },
             close,
@@ -111,22 +39,17 @@ const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props
         [modalState.open]
     );
 
-    const handleSave = () => {
-        const { id, howMuch: howMuchStr, forWhat = "", day = "" } = modalState;
+    const dispatchMainAction = (type: "upsert" | "remove") => {
+        const {
+            id = Date.now(),
+            howMuch: howMuchStr = "",
+            forWhat = "",
+            day = "",
+        } = modalState;
         const howMuch = Number(howMuchStr);
-        if (id) {
-            props.onUpdate({ id, howMuch, forWhat }, day);
-        } else {
-            props.onSave(howMuch, forWhat, day);
-        }
-        close();
-    };
 
-    const handleRemove = () => {
-        if (!modalState.id || !modalState.day) {
-            return;
-        }
-        props.onRemove(modalState.id, modalState.day);
+        props.dispatch({ type, payload: { id, howMuch, forWhat, day } });
+        close();
     };
 
     const formValueUpdater = (key: keyof FormValues) => (value: string) => {
@@ -155,7 +78,7 @@ const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props
                             value={modalState.forWhat}
                             onChangeText={formValueUpdater("forWhat")}
                             style={formStyles.input}
-                            onSubmitEditing={handleSave}
+                            onSubmitEditing={() => dispatchMainAction("upsert")}
                         />
                     </View>
                     <View
@@ -165,9 +88,13 @@ const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props
                         }}
                     >
                         {!!modalState.id && (
-                            <Button title="Delete" onPress={handleRemove} color="red" />
+                            <Button
+                                title="Delete"
+                                onPress={() => dispatchMainAction("remove")}
+                                color="red"
+                            />
                         )}
-                        <Button title="Save" onPress={handleSave} />
+                        <Button title="Save" onPress={() => dispatchMainAction("upsert")} />
                     </View>
                 </View>
             )}

@@ -43,3 +43,15 @@ async function getFirstDay() {
     await AsyncStorage.setItem("FIRST_DAY_WITH_DATA", today);
     return today;
 }
+
+export function cloneDeep<T extends Record<any, any>>(obj: T) {
+    const clone = (Array.isArray(obj) ? [] : {}) as T;
+    for (const key in obj) {
+        if (typeof obj[key] === "object") {
+            clone[key] = cloneDeep(obj[key]);
+        } else {
+            clone[key] = obj[key];
+        }
+    }
+    return clone;
+}

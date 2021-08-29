@@ -14,19 +14,23 @@ const { width } = Dimensions.get("window");
 
 const Layout: React.FC = () => {
     const [data, setData] = useState<Array<DaySpends>>([]);
+    const [pageIndex, setPageIndex] = useState(0);
     const addButtonRef = useRef({ open() {}, close() {} });
     const spendFormRef = useRef({} as SpendFormModalRef);
 
-    const handleAdd = async (howMuch: number, forWhat?: string) => {
+    const handleAdd = async (howMuch: number, forWhat: string, day: string) => {
         if (!howMuch) {
             Alert.alert("Invalid data!", "Spend sum is required");
             return;
         }
-        const result = await addSpend({
-            id: Date.now(),
-            howMuch,
-            forWhat,
-        });
+        const result = await addSpend(
+            {
+                id: Date.now(),
+                howMuch,
+                forWhat,
+            },
+            day
+        );
         if (!result) {
             return;
         }
@@ -63,7 +67,10 @@ const Layout: React.FC = () => {
     };
 
     useEffect(() => {
-        getAllData().then(setData);
+        getAllData().then((data) => {
+            setData(data);
+            setPageIndex(data.length - 1);
+        });
     }, []);
 
     return (
@@ -88,6 +95,7 @@ const Layout: React.FC = () => {
                     itemWidth={width}
                     inactiveSlideScale={1}
                     inactiveSlideOpacity={1}
+                    onSnapToItem={setPageIndex}
                     firstItem={data.length - 1}
                     initialScrollIndex={data.length - 1}
                 />
@@ -102,7 +110,7 @@ const Layout: React.FC = () => {
                 ref={addButtonRef}
                 onPress={(isOpen) => {
                     if (isOpen) {
-                        spendFormRef.current.open();
+                        spendFormRef.current.open({ day: data[pageIndex].day });
                     } else {
                         spendFormRef.current.close();
                     }

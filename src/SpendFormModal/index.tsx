@@ -19,7 +19,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
     UIManager.setLayoutAnimationEnabledExperimental(true);
 
 type SpendFormModalProps = {
-    onSave: (howMuch: number, forWhat?: string) => void;
+    onSave: (howMuch: number, forWhat: string, day: string) => void;
     onRemove: (id: number, day: string) => void;
     onUpdate: (spend: Spend, day: string) => void;
 };
@@ -32,7 +32,7 @@ export type SpendFormModalRef = {
 type FormValues = {
     id?: number;
     day?: string;
-    howMuch: string;
+    howMuch?: string;
     forWhat?: string;
 };
 
@@ -112,12 +112,12 @@ const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props
     );
 
     const handleSave = () => {
-        const { id, howMuch: howMuchStr, forWhat, day = "" } = modalState;
+        const { id, howMuch: howMuchStr, forWhat = "", day = "" } = modalState;
         const howMuch = Number(howMuchStr);
         if (id) {
             props.onUpdate({ id, howMuch, forWhat }, day);
         } else {
-            props.onSave(howMuch, forWhat);
+            props.onSave(howMuch, forWhat, day);
         }
         close();
     };

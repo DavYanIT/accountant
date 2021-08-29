@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import FlashMessage from "react-native-flash-message";
 import Layout from './src';
 
 export default function App() {
@@ -8,6 +9,7 @@ export default function App() {
     <View style={styles.container}>
       <Layout />
       <StatusBar style="auto" />
+      <FlashMessage position="center" />
     </View>
   );
 }

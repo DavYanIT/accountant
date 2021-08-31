@@ -1,6 +1,6 @@
 import React, { useReducer, useRef, forwardRef, useImperativeHandle } from "react";
 import { Button, LayoutAnimation, NativeModules, TextInput, View } from "react-native";
-import { formModalInitialState, formModalReducer } from "../reducers";
+import { formModalInitialState, formModalReducer } from "../../reducers";
 import { modalStyles, formStyles } from "./styles";
 
 import type {
@@ -8,7 +8,7 @@ import type {
     ModalStateReducer,
     SpendFormModalProps,
     SpendFormModalRef,
-} from "../types";
+} from "../../types";
 
 const { UIManager } = NativeModules;
 

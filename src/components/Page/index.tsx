@@ -4,7 +4,7 @@ import Header from "./Header";
 import SpendCard from "../SpendCard";
 import { styles } from "./styles";
 
-import type { DaySpends, Spend } from "../types";
+import type { DaySpends, Spend } from "../../types";
 
 type PageProps = {
     item: DaySpends;

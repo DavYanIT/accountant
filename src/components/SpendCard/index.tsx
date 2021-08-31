@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 
-import type { Spend } from "../types";
+import type { Spend } from "../../types";
 import { styles } from "./styles";
 
 type SpendCardProps = {

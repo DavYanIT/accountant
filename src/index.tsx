@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useReducer } from "react";
 import { Dimensions, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import Page from "./Page";
-import AddButton from "./AddButton";
-import SpendFormModal from "./SpendFormModal";
+import Page from "./components/Page";
+import AddButton from "./components/AddButton";
+import SpendFormModal from "./components/SpendFormModal";
 import { getAllData, mainReducer } from "./reducers";
 import { styles } from "./styles";
 

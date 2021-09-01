@@ -33,7 +33,4 @@ export const styles = StyleSheet.create({
         top: (buttonSize - lineHeight) / 2,
         borderRadius: lineWidth / 2,
     },
-    plusTransform: {
-        transform: [{ rotate: "90deg" }],
-    },
 });

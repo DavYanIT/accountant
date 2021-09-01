@@ -1,12 +1,8 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-    keyboardAvoidingView: {
+    flex1: {
         flex: 1,
-    },
-    safeArea: {
-        flex: 1,
-        // height: "100%",
     },
     pageContainer: {
         flexGrow: 1,

@@ -15,10 +15,10 @@ type PageProps = {
 const Page = ({ item, onCardPress }: PageProps) => {
     return (
         <KeyboardAvoidingView
-            style={styles.keyboardAvoidingView}
+            style={styles.flex1}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-            <SafeAreaView style={styles.safeArea}>
+            <SafeAreaView style={styles.flex1}>
                 <Header>{item.day}</Header>
                 <ScrollView contentContainerStyle={styles.pageContainer}>
                     <Text style={styles.total}>Total: {item.dayTotal}</Text>

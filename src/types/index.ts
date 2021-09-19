@@ -1,3 +1,5 @@
+import { colors } from "../styles";
+
 export type Spend = {
     id: number;
     howMuch: number;
@@ -46,3 +48,5 @@ export type ModalStateReducer = (
     state: ModalState,
     action: { type: "hide" } | { type: "show" | "update.form"; payload: Partial<FormValues> }
 ) => ModalState;
+
+export type ColorsType = typeof colors.light | typeof colors.dark;

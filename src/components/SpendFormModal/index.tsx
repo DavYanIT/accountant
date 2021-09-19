@@ -9,6 +9,7 @@ import type {
     SpendFormModalProps,
     SpendFormModalRef,
 } from "../../types";
+import useThemedStyles from "../../hooks/useThemedStyles";
 
 const { UIManager } = NativeModules;
 
@@ -21,6 +22,8 @@ const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props
         formModalReducer,
         formModalInitialState
     );
+    const modalStylesThemed = useThemedStyles(modalStyles);
+    const formStylesThemed = useThemedStyles(formStyles);
 
     const close = () => {
         LayoutAnimation.spring();
@@ -57,27 +60,28 @@ const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props
     };
 
     return (
-        <View style={[modalState.styles, modalStyles.container]}>
+        <View style={[modalState.styles, modalStylesThemed.container]}>
             {!!modalState.open && (
-                <View style={formStyles.container}>
-                    <View style={formStyles.formItem}>
+                <View style={formStylesThemed.container}>
+                    <View style={formStylesThemed.formItem}>
                         <TextInput
                             placeholder="How much"
                             value={modalState.howMuch}
+                            autoFocus
                             onChangeText={formValueUpdater("howMuch")}
-                            style={formStyles.input}
+                            style={formStylesThemed.input}
                             keyboardType="numeric"
                             returnKeyType="next"
                             onSubmitEditing={() => forWhatRef.current.focus()}
                         />
                     </View>
-                    <View style={formStyles.formItem}>
+                    <View style={formStylesThemed.formItem}>
                         <TextInput
                             ref={forWhatRef}
                             placeholder="For what"
                             value={modalState.forWhat}
                             onChangeText={formValueUpdater("forWhat")}
-                            style={formStyles.input}
+                            style={formStylesThemed.input}
                             onSubmitEditing={() => dispatchMainAction("upsert")}
                         />
                     </View>

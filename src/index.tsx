@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useReducer } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions } from "react-native";
+import { View } from "./components/Themed";
 import Carousel from "react-native-snap-carousel";
 import Page from "./components/Page";
 import AddButton from "./components/AddButton";

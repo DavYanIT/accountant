@@ -1,5 +1,6 @@
 import React from "react";
-import { Text, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { SafeAreaView, KeyboardAvoidingView, Platform } from "react-native";
+import { Text, ScrollView } from "../Themed";
 import Header from "./Header";
 import SpendCard from "../SpendCard";
 import { styles } from "./styles";

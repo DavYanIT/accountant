@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import type { ColorsType } from "../../types";
 
 export const styles = StyleSheet.create({
     flex1: {
@@ -14,21 +15,22 @@ export const styles = StyleSheet.create({
     },
 });
 
-export const headerStyles = StyleSheet.create({
-    container: {
-        height: 88,
-        backgroundColor: "rgba(200, 200, 200, 0.3)",
-        width: "100%",
-        justifyContent: "flex-end",
-    },
-    background: {
-        height: 64,
-        justifyContent: "center",
-        backgroundColor: "rgba(200, 200, 200, 0.3)",
-        width: "100%",
-        alignItems: "center",
-    },
-    text: {
-        fontSize: 24,
-    },
-});
+export const headerStyles = (themeColors: ColorsType) =>
+    StyleSheet.create({
+        container: {
+            height: 88,
+            backgroundColor: themeColors.primary3,
+            width: "100%",
+            justifyContent: "flex-end",
+        },
+        background: {
+            height: 64,
+            justifyContent: "center",
+            backgroundColor: themeColors.primary6,
+            width: "100%",
+            alignItems: "center",
+        },
+        text: {
+            fontSize: 24,
+        },
+    });

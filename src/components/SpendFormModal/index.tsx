@@ -18,7 +18,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 const SpendFormModal = forwardRef<SpendFormModalRef, SpendFormModalProps>((props, ref) => {
     const forWhatRef = useRef({} as TextInput);
-    const [modalState, dispatch] = useReducer<ModalStateReducer>(
+    const [modalState, dispatch] = useReducer<ModalStateReducer<FormValues>>(
         formModalReducer,
         formModalInitialState
     );

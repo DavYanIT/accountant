@@ -34,7 +34,7 @@ export type FormValues = {
     forWhat?: string;
 };
 
-export type ModalState = {
+export type ModalState<T> = {
     styles: {
         height: number;
         width: number;
@@ -42,11 +42,11 @@ export type ModalState = {
         top?: number;
     };
     open: boolean;
-} & Partial<FormValues>;
+} & T;
 
-export type ModalStateReducer = (
-    state: ModalState,
-    action: { type: "hide" } | { type: "show" | "update.form"; payload: Partial<FormValues> }
-) => ModalState;
+export type ModalStateReducer<T> = (
+    state: ModalState<T>,
+    action: { type: "hide" } | { type: "show" | "update.form"; payload: Partial<T> }
+) => ModalState<T>;
 
 export type ColorsType = typeof colors.light | typeof colors.dark;

@@ -19,10 +19,15 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-xxxxxx"
+        "googleMobileAdsAppId": "ca-app-pub-xxxxxx",
+        "googleSignIn": {
+          "reservedClientId": ""
+        }
       }
     },
     "android": {
+      "package": "com.mycompany.myappname",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

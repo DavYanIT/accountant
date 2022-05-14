@@ -4,6 +4,11 @@ import { StyleSheet } from 'react-native';
 import { View } from './src/components/Themed';
 import FlashMessage from "react-native-flash-message";
 import Layout from './src';
+import "./firebase";
+
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['Setting a timer']);
 
 export default function App() {
   return (

@@ -5,6 +5,7 @@ import Carousel from "react-native-snap-carousel";
 import Page from "./components/Page";
 import AddButton from "./components/AddButton";
 import SpendFormModal from "./components/SpendFormModal";
+// import BackTodayIcon from "./components/BackTodayIcon";
 import { getAllData, mainReducer } from "./reducers";
 import { styles } from "./styles";
 
@@ -20,9 +21,20 @@ const Layout: React.FC = () => {
     const [pageIndex, setPageIndex] = useState(0);
     const addButtonRef = useRef({ open() {}, close() {} });
     const spendFormRef = useRef({} as SpendFormModalRef);
+    // const carouselRef = useRef({} as Carousel<DaySpends>);
 
     useEffect(() => {
         getAllData().then((data) => {
+            // const sumForWeeks: Array<number> = [];
+            // for (const dayIndex in data) {
+            //     const weekIndex = Math.floor((data.length - 1 - Number(dayIndex)) / 7);
+            //     console.log(weekIndex, 'weekIndex')
+            //     if (!sumForWeeks[weekIndex]) {
+            //         sumForWeeks[weekIndex] = 0
+            //     }
+            //     sumForWeeks[weekIndex] += data[dayIndex].dayTotal;
+            // }
+            // console.log(sumForWeeks, 'sumForWeeks')
             dispatch({ type: "init", payload: data });
             setPageIndex(data.length - 1);
         });
@@ -32,6 +44,7 @@ const Layout: React.FC = () => {
         <View style={styles.container}>
             {!!data.length && (
                 <Carousel
+                    // ref={carouselRef}
                     data={data}
                     renderItem={({ item }) => (
                         <Page
@@ -72,6 +85,7 @@ const Layout: React.FC = () => {
                     }
                 }}
             />
+            {/* <BackTodayIcon onPress={() => carouselRef.current.snapToItem(data.length - 1)} /> */}
         </View>
     );
 };
